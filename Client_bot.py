@@ -111,9 +111,25 @@ cake_filling = [
     ],
     [
         InlineKeyboardButton('Ганаш',callback_data='ganache_filling')
+    ],
+    [
+        InlineKeyboardButton('Карамель',callback_data='caramel_filling')
     ]
 ]
-
+ccaramel_filling = [
+    [
+        InlineKeyboardButton('Карамель',callback_data='caramel_filling_ok')
+    ],
+    [
+        InlineKeyboardButton('Карамель-арахис',callback_data='caramel_peanuts')
+    ],
+    [
+        InlineKeyboardButton('Карамель-грецкий орех',callback_data='caramel_walnut')
+    ],
+    [
+        InlineKeyboardButton('Карамель-банан',callback_data='caramel_banana')
+    ]
+]
 berry_filling = [
     [
         InlineKeyboardButton('Малиновый конфитюр',callback_data='raspberry_jam')
@@ -211,6 +227,7 @@ mousse_filling_markup = InlineKeyboardMarkup(mousse_filling)
 berry_filling_markup = InlineKeyboardMarkup(berry_filling)
 cake_filling_markup = InlineKeyboardMarkup(cake_filling)
 ganache_filling_markup = InlineKeyboardMarkup(ganache_filling)
+caramel_filling_markup = InlineKeyboardMarkup(ccaramel_filling)
 berry_mousse_markup = InlineKeyboardMarkup(berry_mousse)
 chocolate_mousse_markup = InlineKeyboardMarkup(chocolate_mousse)
 cake_cream_markup = InlineKeyboardMarkup(cake_cream)
@@ -246,106 +263,128 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     
     elif query.data == 'vanilla_base':
         context.user_data['cake_build']['корж'] = "Ванильный"
-        await query.edit_message_text('Выберите крем:',reply_markup=cake_cream_markup)   
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nВыберите крем:",reply_markup=cake_cream_markup)  
     elif query.data == 'red_velvet_base':
         context.user_data['cake_build']['корж'] = "Красный бархат"
-        await query.edit_message_text('Выберите крем:',reply_markup=cake_cream_markup)        
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nВыберите крем:",reply_markup=cake_cream_markup)       
     elif query.data == 'honey_base':
         context.user_data['cake_build']['корж'] = "Медовый"
-        await query.edit_message_text('Выберите крем:',reply_markup=cake_cream_markup)        
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nВыберите крем:",reply_markup=cake_cream_markup)         
     elif query.data == 'poppy_seed_base':
         context.user_data['cake_build']['корж'] = "Маковый"
-        await query.edit_message_text('Выберите крем:',reply_markup=cake_cream_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nВыберите крем:",reply_markup=cake_cream_markup) 
     elif query.data == 'chocolate_base':
         context.user_data['cake_build']['корж'] = "Шоколадный"
-        await query.edit_message_text('Выберите крем:',reply_markup=cake_cream_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nВыберите крем:",reply_markup=cake_cream_markup) 
 
         
     elif query.data == 'sour_cream':
         context.user_data['cake_build']['крем'] = 'Сметанно-сливочный'
-        await query.edit_message_text('выберите начинку:',reply_markup=cake_filling_markup)           
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:",reply_markup=cake_filling_markup)           
     elif query.data == 'cream_cheese':
         context.user_data['cake_build']['крем'] = 'Творожно-сливочный(крем-чиз'
-        await query.edit_message_text('выберите начинку:',reply_markup=cake_filling_markup)          
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:",reply_markup=cake_filling_markup)            
     elif query.data == 'Milk_Chocolate_Ganache':
         context.user_data['cake_build']['крем'] = 'Ганаш с молочныйм шоколадом'
-        await query.edit_message_text('выберите начинку:',reply_markup=cake_filling_markup)           
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:",reply_markup=cake_filling_markup)             
     elif query.data == 'white_Chocolate_Ganache':
         context.user_data['cake_build']['крем'] = 'Ганаш с белым шоколадом'
-        await query.edit_message_text('выберите начинку:',reply_markup=cake_filling_markup)     
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:",reply_markup=cake_filling_markup)     
     elif query.data == 'black_Chocolate_Ganache':
         context.user_data['cake_build']['крем'] = 'Ганаш с темным шоколадом'
-        await query.edit_message_text('выберите начинку:',reply_markup=cake_filling_markup)        
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:",reply_markup=cake_filling_markup)          
     elif query.data == 'sour_cream_2':
         context.user_data['cake_build']['крем'] = 'Творожно-сливочный крем со сгущеным молоком'
-        await query.edit_message_text('выберите начинку:',reply_markup=cake_filling_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:",reply_markup=cake_filling_markup)
     
 
     elif query.data == 'mousse_filling':
-        await query.edit_message_text('Выберите начинку:',reply_markup=mousse_filling_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:",reply_markup=mousse_filling_markup)
     elif query.data == 'berry_filling':
-        await query.edit_message_text('Выберите начинку:',reply_markup=berry_filling_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:",reply_markup=berry_filling_markup)
     elif query.data == 'chocolate_mousse':
-        await query.edit_message_text('Выберите начинку:', reply_markup=chocolate_mousse_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:", reply_markup=chocolate_mousse_markup)
     elif query.data == 'ganache_filling':
-        await query.edit_message_text('Выберите начинку:',reply_markup=ganache_filling_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:",reply_markup=ganache_filling_markup)
+    elif query.data == 'caramel_filling':
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:",reply_markup=caramel_filling_markup)
+
+    elif query.data == 'caramel_filling_ok':
+        context.user_data['cake_build']['начинка'] = 'Карамель'
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
+
+    elif query.data == 'caramel_peanuts':
+        context.user_data['cake_build']['начинка'] = 'Карамель-арахис'
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
+
+    elif query.data == 'caramel_walnut':
+        context.user_data['cake_build']['начинка'] = 'Карамель-грецкий орех'
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
+
+    elif query.data == 'caramel_banana':
+        context.user_data['cake_build']['начинка'] = 'Карамель-банан'
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
+
 
     elif query.data == 'ganache_filling_white':
         context.user_data['cake_build']['начинка'] = 'Ганаш на белом шоколаде'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
     elif query.data == 'ganache_filling_milk':
         context.user_data['cake_build']['начинка'] = 'Ганаш на молочном шоколаде'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
     elif query.data == 'ganache_filling_black':
         context.user_data['cake_build']['начинка'] = 'Ганаш на тёмном шоколаде'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
 
     elif query.data == 'raspberry_jam':
         context.user_data['cake_build']['начинка'] = 'Малиновый конфитюр'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
     elif query.data == 'strawberry_jam':
         context.user_data['cake_build']['начинка'] = 'Клубничный конфитюр'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
     elif query.data == 'cherry_jam':
         context.user_data['cake_build']['начинка'] = 'Вишневый конфитюр'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
     elif query.data == 'currant_Jam':
         context.user_data['cake_build']['начинка'] = 'Смородиновый конфитюр'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
     elif query.data == 'mix_jam':
         context.user_data['cake_build']['начинка'] = 'Ягодный конфитюр(микс)'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)        
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)    
+    
     elif query.data == 'milk_chocolate_mousse':
         context.user_data['cake_build']['начинка'] = 'мусс на молочном шоколаде'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
     elif query.data == 'white_chocolate_mousse':
         context.user_data['cake_build']['начинка'] = 'мусс на белом шоколаде'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
     elif query.data == 'black_chocolate_mousse':
         context.user_data['cake_build']['начинка'] = 'мусс на тёмном шоколаде'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
+    
     elif query.data == 'berry_mousse':
-        await query.edit_message_text('Выберите ягодный мусс:',reply_markup=berry_mousse_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите ягодный мусс:",reply_markup=berry_mousse_markup)
+   
     elif query.data == 'raspberry_mousse':
         context.user_data['cake_build']['начинка'] = 'мусс: Малина'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
-    elif query.data == 'raspberry_mousse':
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
+    elif query.data == 'strawberry_mousse':
         context.user_data['cake_build']['начинка'] = 'мусс: Клубника'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
     elif query.data == 'cerry_mousse':
         context.user_data['cake_build']['начинка'] = 'мусс: Вишня'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
     elif query.data == 'currant_mousse':
         context.user_data['cake_build']['начинка'] = 'мусс: Cмородина'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
     elif query.data == 'mix_mousse':
         context.user_data['cake_build']['начинка'] = 'мусс: Cмесь ягод (микс)'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
 
 
     elif query.data == 'caramel_mousse':
         context.user_data['cake_build']['начинка'] = 'мусс: Карамельный'
-        await query.edit_message_text('Выберите финальное покрытие:',reply_markup=final_coating_markup)
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
     
 
 
@@ -354,15 +393,15 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     elif query.data == 'final_coating_white_ganache':
         context.user_data['cake_build']['покрытие'] = 'Ганаш на белом шоколаде'
-        await query.edit_message_text('Введите вес торта в килограммах:')
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nФинальное покрытие: {context.user_data['cake_build']['покрытие']}\nВведите вес торта в килограммах:")
         context.user_data['waiting_quantity_build_cake'] = True
     elif query.data == 'final_coating_milk_ganache':
         context.user_data['cake_build']['покрытие'] = 'Ганаш на молочном шоколаде'
-        await query.edit_message_text('Введите вес торта в килограммах:')
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nФинальное покрытие: {context.user_data['cake_build']['покрытие']}\nВведите вес торта в килограммах:")
         context.user_data['waiting_quantity_build_cake'] = True  
     elif query.data == 'final_cream_cheese':
         context.user_data['cake_build']['покрытие'] = 'Крем-чиз'
-        await query.edit_message_text('Введите вес торта в килограммах:')
+        await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nФинальное покрытие: {context.user_data['cake_build']['покрытие']}\nВведите вес торта в килограммах:")
         context.user_data['waiting_quantity_build_cake'] = True
 
 

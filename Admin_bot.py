@@ -19,13 +19,18 @@
 # if __name__ == '__main__':
 #     main()
 
-ganache_filling = [
+caramel_filling_markup = InlineKeyboardMarkup(ccaramel_filling)
+ccaramel_filling = [
     [
-        InlineKeyboardButton('Ганаш на белом шоколаде',callback_data='ganache_filling_white')
+        InlineKeyboardButton('Карамель',callback_data='cramel_filling_ok')
     ],
     [
-        InlineKeyboardButton('Ганаш на молочном шоколаде',callback_data='ganache_filling_milk')
+        InlineKeyboardButton('Карамель-арахис',callback_data='caramel_peanuts')
     ],
     [
-        InlineKeyboardButton('Ганаш на тёмном шоколаде',callback_data='ganache_filling_black')
+        InlineKeyboardButton('Карамель-грецкий орех',callback_data='caramel_walnut')
     ],
+    [
+        InlineKeyboardButton('Карамель-банан',callback_data='caramel_banana')
+    ]
+]

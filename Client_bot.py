@@ -1,6 +1,9 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, CallbackQueryHandler
 import asyncio
+from tortoise import Tortoise, run_async
+from models import User, Order
+
 
 TOKEN = '7287431498:AAEVkzhrn3xjTOj-Q-WFo1qBzDoNlZMgmaM'
 cake_creator_id =  845963398
@@ -237,20 +240,21 @@ cake_build_final_markup = InlineKeyboardMarkup(cake_build_final)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(text='Пожалуйста, введите ваше имя:')
-    context.user_data['waiting_for_name']=True
-    context.user_data['cake_build'] = {
-    'корж': None,
-    'начинка': None,
-    'крем': None,
-    'покрытие': None,
-    'вес': 0.0
-    }
+    chat_id = update.effective_chat.id
+    try:
+        user = await User.get(chat_id=chat_id)
+        await update.message.reply_text(text=f'Привествуем вас, {user.name}!\nХодите выбрать торт или собрать?',reply_markup=first_level_reply_markup)
+    except:
+        await update.message.reply_text(text='Пожалуйста, введите ваше имя:')
+        context.user_data['waiting_for_name']=True
+        
 
 
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    global name_cake
+    
+    chat_id = update.effective_chat.id
+    user = await User.get(chat_id=chat_id)
     query = update.callback_query
     await query.answer()
 
@@ -259,6 +263,13 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
    
 
     elif query.data == 'build_cake':
+        context.user_data['cake_build'] = {
+        'корж': None,
+        'начинка': None,
+        'крем': None,
+        'покрытие': None,
+        'вес': 0.0
+        }
         await query.edit_message_text(text='Выберите корж:', reply_markup=build_cake_base_markup)
     
     elif query.data == 'vanilla_base':
@@ -277,7 +288,6 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         context.user_data['cake_build']['корж'] = "Шоколадный"
         await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nВыберите крем:",reply_markup=cake_cream_markup) 
 
-        
     elif query.data == 'sour_cream':
         context.user_data['cake_build']['крем'] = 'Сметанно-сливочный'
         await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:",reply_markup=cake_filling_markup)           
@@ -297,7 +307,6 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         context.user_data['cake_build']['крем'] = 'Творожно-сливочный крем со сгущеным молоком'
         await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:",reply_markup=cake_filling_markup)
     
-
     elif query.data == 'mousse_filling':
         await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nВыберите начинку:",reply_markup=mousse_filling_markup)
     elif query.data == 'berry_filling':
@@ -312,19 +321,15 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     elif query.data == 'caramel_filling_ok':
         context.user_data['cake_build']['начинка'] = 'Карамель'
         await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
-
     elif query.data == 'caramel_peanuts':
         context.user_data['cake_build']['начинка'] = 'Карамель-арахис'
         await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
-
     elif query.data == 'caramel_walnut':
         context.user_data['cake_build']['начинка'] = 'Карамель-грецкий орех'
         await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
-
     elif query.data == 'caramel_banana':
         context.user_data['cake_build']['начинка'] = 'Карамель-банан'
         await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
-
 
     elif query.data == 'ganache_filling_white':
         context.user_data['cake_build']['начинка'] = 'Ганаш на белом шоколаде'
@@ -381,16 +386,10 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         context.user_data['cake_build']['начинка'] = 'мусс: Cмесь ягод (микс)'
         await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
 
-
     elif query.data == 'caramel_mousse':
         context.user_data['cake_build']['начинка'] = 'мусс: Карамельный'
         await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nВыберите финальное покрытие:",reply_markup=final_coating_markup)
     
-
-
-
-
-
     elif query.data == 'final_coating_white_ganache':
         context.user_data['cake_build']['покрытие'] = 'Ганаш на белом шоколаде'
         await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nФинальное покрытие: {context.user_data['cake_build']['покрытие']}\nВведите вес торта в килограммах:")
@@ -403,9 +402,6 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         context.user_data['cake_build']['покрытие'] = 'Крем-чиз'
         await query.edit_message_text(f"Основа: {context.user_data['cake_build']['корж']}\nКрем: {context.user_data['cake_build']['крем']}\nНачинка: {context.user_data['cake_build']['начинка']}\nФинальное покрытие: {context.user_data['cake_build']['покрытие']}\nВведите вес торта в килограммах:")
         context.user_data['waiting_quantity_build_cake'] = True
-
-
-
 
     elif query.data == 'chocolate_cake':
         context.user_data['cake_name'] = 'шоколадный'
@@ -433,6 +429,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await query.edit_message_text(text='Хочешь выбрать конкретный торт или собрать самостоятельно?', reply_markup=first_level_reply_markup)
 
     elif query.data == 'YES':
+        
         order_summary = (
                 f"\n• Корж: {context.user_data['cake_build']['корж']}\n"
                 f"• Крем: {context.user_data['cake_build']['крем']}\n"
@@ -440,26 +437,30 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 f"• Покрытие: {context.user_data['cake_build']['покрытие']}\n"
                 f"• Вес: {context.user_data['cake_build']['вес']} кг\n"
             )
-        await send_message_creator(context,f'Пользователь {context.user_data.get("name")} с номером: {context.user_data.get("number_contact")} заказал торт: {order_summary}')
-        await query.edit_message_text(text=f'{context.user_data.get("name")}, спасибо за заказ!🤗\nМы Вам перезвоним в течении получаса🕖📲',reply_markup=InlineKeyboardMarkup([build_cake_keyboard[-2]]))
+        await send_message_creator(context,f'Пользователь {user.name} с номером: {user.phone_num} заказал торт: {order_summary}')
+        await query.edit_message_text(text=f'{user.name}, спасибо за заказ!🤗\nМы Вам перезвоним в течении получаса🕖📲',reply_markup=InlineKeyboardMarkup([build_cake_keyboard[-2]]))
+
 
 
 async def send_message_creator(context:ContextTypes.DEFAULT_TYPE, message:str):
     await context.bot.send_message(chat_id=cake_creator_id, text=message)
 
 
+
 async def echo(update: Update, context:ContextTypes.DEFAULT_TYPE) -> None:
+    chat_id = update.effective_chat.id
+    user = await User.get(chat_id=chat_id)
     if context.user_data.get('waiting_for_quantity'):
             weight_cake = update.message.text
             weight_cake = float(weight_cake)
-            await update.message.reply_text(f'{context.user_data.get("name")}, спасибо за заказ!🤗\nВы выбрали торт {context.user_data.get("cake_name")}, весом {weight_cake} кг.🍰\nМы Вам перезвоним в течении получаса🕖📲',reply_markup=InlineKeyboardMarkup([build_cake_keyboard[-2]]))
-            await send_message_creator(context,message=f'Пользователь {context.user_data.get("name")} с номером: {context.user_data.get("number_contact")} заказал торт: {context.user_data.get("cake_name")}, весом {weight_cake} кг')
+            await update.message.reply_text(f'{user.name}, спасибо за заказ!🤗\nВы выбрали торт {context.user_data.get("cake_name")}, весом {weight_cake} кг.🍰\nМы Вам перезвоним в течении получаса🕖📲',reply_markup=InlineKeyboardMarkup([build_cake_keyboard[-2]]))
+            await send_message_creator(context,message=f'Пользователь {user.name} с номером: {user.phone_num} заказал торт: {context.user_data.get("cake_name")}, весом {weight_cake} кг')
             context.user_data['waiting_for_quantity'] = False
 
     elif context.user_data.get('waiting_quantity_build_cake'):
         context.user_data['cake_build']['вес'] = float(update.message.text)
         order_summary = (
-                f"Ваш заказ, {context.user_data.get('name')}!\n\n"
+                f"Ваш заказ, {user.name}!\n\n"
                 f"Вы выбрали торт:\n"
                 f"• Корж: {context.user_data['cake_build']['корж']}\n"
                 f"• Крем: {context.user_data['cake_build']['крем']}\n"
@@ -478,6 +479,10 @@ async def echo(update: Update, context:ContextTypes.DEFAULT_TYPE) -> None:
 
     elif context.user_data.get('waiting_for_number'):
         context.user_data['number_contact'] = update.message.text
+        chat_id = update.effective_chat.id
+        name = context.user_data['name']
+        phone_num = context.user_data['number_contact']
+        await User.create(chat_id=chat_id,name=name,phone_num=phone_num)
         await update.message.reply_text('Спасибо! Теперь вы можете выбрать торт или собрать его самостоятельно.', reply_markup=first_level_reply_markup)
         context.user_data['waiting_for_number'] = False
 
@@ -485,7 +490,20 @@ async def echo(update: Update, context:ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text("юзай команды")
 
 
+
+async def init():
+    await Tortoise.init(
+        db_url="sqlite://database.db",
+        modules={"models": ["models"]}
+    )
+    await Tortoise.generate_schemas()
+
+
 def main():
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(init())
+
     application = ApplicationBuilder().token(TOKEN).build()
 
     start_handler = CommandHandler('start', start)
